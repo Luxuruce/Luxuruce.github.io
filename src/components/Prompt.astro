@@ -1,0 +1,18 @@
+---
+/** 一行终端提示符：lenoral@github:~$ <command> */
+interface Props {
+  path?: string;
+  /** 首条命令使用打字动画（仅在 JS 可用且未要求减少动画时） */
+  typing?: boolean;
+  as?: 'div' | 'p';
+}
+const { path = '~', typing = false, as: Tag = 'div' } = Astro.props;
+const cmd = await Astro.slots.render('default');
+const len = cmd.replace(/<[^>]*>/g, '').length;
+---
+
+<Tag class="cmd">
+  <span class="ps">lenoral@github</span>:<span class="path">{path}</span>$ <b
+    class:list={{ type: typing }}
+    style={typing ? `--n:${len}` : undefined}><Fragment set:html={cmd} /></b>
+</Tag>

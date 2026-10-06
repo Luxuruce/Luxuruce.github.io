@@ -14,6 +14,12 @@ export const ui = {
     'lang.switch': 'EN',
     'notFound.title': '页面不存在',
     'notFound.back': '回到首页',
+    'notFound.hint': '试试下面的命令：',
+    'projects.total': '个仓库',
+    'post.cd': '返回上一级',
+    'lang.switchLabel': '切换到英文',
+    'footer.text': '用 Astro 构建 · 托管于 GitHub Pages',
+    'skip': '跳到正文',
   },
   en: {
     'nav.about': 'About',
@@ -26,6 +32,12 @@ export const ui = {
     'lang.switch': '中文',
     'notFound.title': 'Page not found',
     'notFound.back': 'Back home',
+    'notFound.hint': 'Try one of these:',
+    'projects.total': 'repositories',
+    'post.cd': 'back to parent',
+    'lang.switchLabel': 'Switch to Chinese',
+    'footer.text': 'Built with Astro · hosted on GitHub Pages',
+    'skip': 'Skip to content',
   },
 } as const;
 

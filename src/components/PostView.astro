@@ -1,9 +1,11 @@
 ---
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import LangSwitch from './LangSwitch.astro';
+import TopBar from './TopBar.astro';
+import Prompt from './Prompt.astro';
 import { type Post, postSlug } from '../lib/posts';
 import { type Lang, useTranslations, localePath, otherLang, formatDate } from '../i18n/ui';
+import { profile } from '../data/profile';
 
 interface Props {
   lang: Lang;
@@ -13,19 +15,44 @@ interface Props {
 const { lang, post, hasTranslation } = Astro.props;
 const t = useTranslations(lang);
 const { Content } = await render(post);
-const altHref = localePath(otherLang(lang), hasTranslation ? `/posts/${postSlug(post)}/` : '/');
+const slug = postSlug(post);
+const altHref = localePath(otherLang(lang), hasTranslation ? `/posts/${slug}/` : '/');
+const iso = post.data.date.toISOString().slice(0, 10);
 ---
 
 <Base lang={lang} title={post.data.title} description={post.data.description} altHref={altHref}>
-  <main class="container">
-    <div class="hero-top">
-      <a href={localePath(lang)}>← {t('post.back')}</a>
-      <LangSwitch lang={lang} href={altHref} />
-    </div>
-    <article class="prose">
-      <h1>{post.data.title}</h1>
-      <p class="meta">{formatDate(post.data.date, lang)}{post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}</p>
-      <Content />
-    </article>
-  </main>
+  <div class="term">
+    <TopBar lang={lang} altHref={altHref} />
+
+    <main id="main">
+      <Prompt>cat posts/{slug}.md</Prompt>
+      <article class="out post">
+        <div class="frontmatter" aria-label="meta">
+          <div class="rule" aria-hidden="true">---</div>
+          <div><span class="k">date</span>: <time datetime={iso}>{formatDate(post.data.date, lang)}</time></div>
+          {
+            post.data.tags.length > 0 && (
+              <div>
+                <span class="k">tags</span>: <span class="s">[{post.data.tags.join(', ')}]</span>
+              </div>
+            )
+          }
+          <div class="rule" aria-hidden="true">---</div>
+        </div>
+        <div class="prose">
+          <h1>{post.data.title}</h1>
+          <Content />
+        </div>
+      </article>
+
+      <div class="block back">
+        <Prompt>
+          <a href={localePath(lang)} rel="up">cd ..</a>
+        </Prompt>
+        <p class="out desc"># {t('post.cd')} · {t('post.back')}</p>
+      </div>
+    </main>
+
+    <footer class="foot">© {new Date().getFullYear()} {profile.name} · {t('footer.text')}</footer>
+  </div>
 </Base>

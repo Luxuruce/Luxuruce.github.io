@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { type Lang, otherLang } from '../i18n/ui';
+import { type Lang, otherLang, useTranslations } from '../i18n/ui';
 import { profile } from '../data/profile';
 
 interface Props {
@@ -23,7 +23,16 @@ const alt = otherLang(lang);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#0d1117" />
+    <meta name="color-scheme" content="dark" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
+    />
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <link rel="alternate" hreflang={alt === 'zh' ? 'zh-CN' : 'en'} href={new URL(altHref, Astro.site)} />
     <meta property="og:title" content={pageTitle} />
@@ -32,6 +41,7 @@ const alt = otherLang(lang);
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>
+    <a class="skip" href="#main">{useTranslations(lang)('skip')}</a>
     <slot />
   </body>
 </html>

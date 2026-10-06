@@ -1,12 +1,51 @@
 ---
 import Base from '../layouts/Base.astro';
+import TopBar from '../components/TopBar.astro';
+import Prompt from '../components/Prompt.astro';
 import { ui } from '../i18n/ui';
+
+const ascii404 = [
+  " _  _    ___   _  _",
+  "| || |  / _ \\ | || |",
+  "| || |_| | | || || |_",
+  "|__   _| |_| ||__   _|",
+  "   |_|  \\___/    |_|",
+].join('\n');
 ---
 
 <Base lang="zh" title="404" altHref="/en/">
-  <main class="container">
-    <h1>404</h1>
-    <p>{ui.zh['notFound.title']} · {ui.en['notFound.title']}</p>
-    <p><a href="/">{ui.zh['notFound.back']}</a> · <a href="/en/">{ui.en['notFound.back']}</a></p>
-  </main>
+  <div class="term">
+    <TopBar lang="zh" altHref="/en/" />
+    <main id="main">
+      <h1 class="sr-only">404 · {ui.zh['notFound.title']} · <span lang="en">{ui.en['notFound.title']}</span></h1>
+      <div class="block">
+        <Prompt><span data-path>./unknown-page</span></Prompt>
+        <div class="out">
+          <p class="err">bash: <span data-path>./unknown-page</span>: command not found</p>
+          <p class="desc"># 404 · {ui.zh['notFound.title']}</p>
+          <p class="desc" lang="en"># 404 · {ui.en['notFound.title']}</p>
+        </div>
+      </div>
+      <pre class="ascii ascii-404" aria-hidden="true">{ascii404}</pre>
+      <div class="block">
+        <p class="out desc">
+          # {ui.zh['notFound.hint']} <span lang="en">/ {ui.en['notFound.hint']}</span>
+        </p>
+        <Prompt><a href="/">cd ~</a></Prompt>
+        <p class="out desc"># {ui.zh['notFound.back']}</p>
+        <Prompt><a href="/en/" lang="en">cd ~/en</a></Prompt>
+        <p class="out desc" lang="en"># {ui.en['notFound.back']}</p>
+      </div>
+      <div class="block">
+        <Prompt><span class="cursor" aria-hidden="true"></span></Prompt>
+      </div>
+    </main>
+  </div>
+  <script is:inline>
+    (function () {
+      var p = decodeURIComponent(location.pathname).replace(/^\/+|\/+$/g, '') || '404';
+      if (p.length > 60) p = p.slice(0, 57) + '...';
+      document.querySelectorAll('[data-path]').forEach(function (el) { el.textContent = p; });
+    })();
+  </script>
 </Base>

@@ -1,0 +1,15 @@
+---
+import LangSwitch from './LangSwitch.astro';
+import { type Lang, localePath } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  altHref: string;
+}
+const { lang, altHref } = Astro.props;
+---
+
+<header class="bar">
+  <a class="logo" href={localePath(lang)} aria-label="~/lenoral — home">~/lenoral</a>
+  <LangSwitch lang={lang} href={altHref} />
+</header>

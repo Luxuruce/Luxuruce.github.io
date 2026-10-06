@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import LangSwitch from './LangSwitch.astro';
+import TopBar from './TopBar.astro';
+import Prompt from './Prompt.astro';
 import { profile } from '../data/profile';
 import { getProjects } from '../lib/github';
 import { getPosts, postSlug } from '../lib/posts';
-import { type Lang, useTranslations, localePath, otherLang, formatDate } from '../i18n/ui';
+import { type Lang, useTranslations, localePath, otherLang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -13,59 +14,114 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const projects = await getProjects(lang);
 const posts = await getPosts(lang);
+
+const isoDate = (d: Date) => d.toISOString().slice(0, 10);
+const display = (href: string) => href.replace(/^(https?:\/\/|mailto:)/, '').replace(/\/$/, '');
+const keyWidth = Math.max(...profile.links.map((l) => l.label.en.length));
+const ascii = [
+  " _                               _",
+  "| |    ___ _ __   ___  _ __ __ _| |",
+  "| |   / _ \\ '_ \\ / _ \\| '__/ _` | |",
+  "| |__|  __/ | | | (_) | | | (_| | |___",
+  "|_____\\___|_| |_|\\___/|_|  \\__,_|_____|",
+].join('\n');
 ---
 
 <Base lang={lang} altHref={localePath(otherLang(lang))}>
-  <main class="container">
-    <header class="hero">
-      <div class="hero-top">
-        <img class="avatar" src={profile.avatar} alt={profile.name} width="56" height="56" />
-        <LangSwitch lang={lang} href={localePath(otherLang(lang))} />
+  <div class="term">
+    <TopBar lang={lang} altHref={localePath(otherLang(lang))} />
+
+    <main id="main">
+      <section class="block" aria-labelledby="whoami">
+        <h1 id="whoami" class="sr-only">{profile.name}</h1>
+        <pre class="ascii" aria-hidden="true">{ascii}</pre>
+        <Prompt typing>whoami</Prompt>
+        <dl class="out kv">
+          <div><dt class="k">name</dt> = <dd class="s">"{profile.name}"</dd></div>
+          <div><dt class="k">role</dt> = <dd class="s">"{profile.role[lang]}"</dd></div>
+          <div><dt class="k">bio</dt> = <dd class="s">"{profile.bio[lang]}"</dd></div>
+        </dl>
+      </section>
+
+      <section class="block" aria-label={t('nav.about')}>
+        <Prompt>cat about.md</Prompt>
+        <div class="out">
+          {profile.about[lang].map((p) => <p class="para">{p}</p>)}
+        </div>
+      </section>
+
+      <section class="block" aria-label={t('nav.projects')}>
+        <Prompt>ls -l projects/</Prompt>
+        <div class="out">
+          <p class="desc">total {projects.length} <span class="sr-only">{t('projects.total')}</span></p>
+          <table class="ls" aria-label={t('nav.projects')}>
+            <colgroup>
+              <col class="c-perm" />
+              <col class="c-lang" />
+              <col />
+            </colgroup>
+            <tbody>
+              {
+                projects.map((p) => (
+                  <tr>
+                    <td class="perm" aria-hidden="true">drwxr-xr-x</td>
+                    <td class="lang-col">{p.language ?? '-'}</td>
+                    <td class="name">
+                      <a href={p.url}>{p.name}/</a>
+                      {p.stars > 0 && <span class="star" title="stars"> ★{p.stars}</span>}
+                      <div class="desc"># {p.description ?? t('projects.noDescription')}</div>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+          <p class="more">
+            <span class="desc"># {t('projects.viewAll')} →</span>
+            <a href={`https://github.com/${profile.githubUser}?tab=repositories`}>github.com/{profile.githubUser}?tab=repositories</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="block" aria-label={t('nav.writing')}>
+        <Prompt>ls posts/</Prompt>
+        <div class="out">
+          {posts.length === 0 && <p class="desc"># {t('writing.empty')}</p>}
+          <ul class="files">
+            {
+              posts.map((post) => (
+                <li>
+                  <time class="date" datetime={isoDate(post.data.date)}>{isoDate(post.data.date)}</time>
+                  <span class="file">
+                    <a href={localePath(lang, `/posts/${postSlug(post)}/`)}>{postSlug(post)}.md</a>
+                    <span class="desc"> # {post.data.title}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+
+      <section class="block" aria-label="contact">
+        <Prompt>cat contact.txt</Prompt>
+        <ul class="out files">
+          {
+            profile.links.map((l) => (
+              <li>
+                <span class="k">{l.label.en.toLowerCase().padEnd(keyWidth)}</span> →{' '}
+                <a href={l.href}>{display(l.href)}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <div class="block">
+        <Prompt><span class="cursor" aria-hidden="true"></span></Prompt>
       </div>
-      <h1>{profile.name}</h1>
-      <p class="role">{profile.role[lang]}</p>
-      <p class="muted">{profile.bio[lang]}</p>
-      <nav class="links">
-        {profile.links.map((l) => <a href={l.href}>{l.label[lang]}</a>)}
-      </nav>
-    </header>
+    </main>
 
-    <section id="about">
-      <h2>{t('nav.about')}</h2>
-      {profile.about[lang].map((p) => <p>{p}</p>)}
-    </section>
-
-    <section id="projects">
-      <h2>{t('nav.projects')}</h2>
-      <ul class="list">
-        {
-          projects.map((p) => (
-            <li>
-              <a href={p.url}>{p.name}</a>
-              <span class="meta">{p.language}</span>
-              <p class="muted">{p.description ?? t('projects.noDescription')}</p>
-            </li>
-          ))
-        }
-      </ul>
-      <p><a href={`https://github.com/${profile.githubUser}?tab=repositories`}>{t('projects.viewAll')} →</a></p>
-    </section>
-
-    <section id="writing">
-      <h2>{t('nav.writing')}</h2>
-      {posts.length === 0 && <p class="muted">{t('writing.empty')}</p>}
-      <ul class="list">
-        {
-          posts.map((post) => (
-            <li>
-              <a href={localePath(lang, `/posts/${postSlug(post)}/`)}>{post.data.title}</a>
-              <span class="meta">{formatDate(post.data.date, lang)}</span>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-
-    <footer class="muted">© {new Date().getFullYear()} {profile.name}</footer>
-  </main>
+    <footer class="foot">© {new Date().getFullYear()} {profile.name} · {t('footer.text')}</footer>
+  </div>
 </Base>
