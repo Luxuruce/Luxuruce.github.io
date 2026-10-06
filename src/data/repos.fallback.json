@@ -1,0 +1,35 @@
+[
+  {
+    "name": "ai-smart-tourism-demo",
+    "html_url": "https://github.com/Luxuruce/ai-smart-tourism-demo",
+    "description": "青石古镇 · 景区口碑与体验 MVP 可交互前端原型（uni-app 游客端 + Vue 3 后台）",
+    "language": "Vue",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-27T07:49:02Z",
+    "topics": [],
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "priceRelatAgent",
+    "html_url": "https://github.com/Luxuruce/priceRelatAgent",
+    "description": null,
+    "language": "Python",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-24T18:17:42Z",
+    "topics": [],
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "kernelPlia",
+    "html_url": "https://github.com/Luxuruce/kernelPlia",
+    "description": null,
+    "language": "Python",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-24T11:23:54Z",
+    "topics": [],
+    "fork": false,
+    "archived": false
+  }
+]

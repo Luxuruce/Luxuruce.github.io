@@ -1,0 +1,15 @@
+---
+import { type Lang, useTranslations, otherLang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  href: string;
+  class?: string;
+}
+const { lang, href, class: className } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<a class:list={['lang-switch', className]} href={href} hreflang={otherLang(lang)} lang={otherLang(lang)}>
+  {t('lang.switch')}
+</a>

@@ -1,0 +1,37 @@
+---
+import '../styles/global.css';
+import { type Lang, otherLang } from '../i18n/ui';
+import { profile } from '../data/profile';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  /** 另一语言版本的地址 */
+  altHref: string;
+}
+
+const { lang, title, description = profile.bio[lang], altHref } = Astro.props;
+const pageTitle = title ? `${title} · ${profile.name}` : profile.name;
+const alt = otherLang(lang);
+---
+
+<!doctype html>
+<html lang={lang === 'zh' ? 'zh-CN' : 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="alternate" hreflang={alt === 'zh' ? 'zh-CN' : 'en'} href={new URL(altHref, Astro.site)} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={profile.avatar} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

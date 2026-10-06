@@ -1,0 +1,31 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import LangSwitch from './LangSwitch.astro';
+import { type Post, postSlug } from '../lib/posts';
+import { type Lang, useTranslations, localePath, otherLang, formatDate } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  post: Post;
+  hasTranslation: boolean;
+}
+const { lang, post, hasTranslation } = Astro.props;
+const t = useTranslations(lang);
+const { Content } = await render(post);
+const altHref = localePath(otherLang(lang), hasTranslation ? `/posts/${postSlug(post)}/` : '/');
+---
+
+<Base lang={lang} title={post.data.title} description={post.data.description} altHref={altHref}>
+  <main class="container">
+    <div class="hero-top">
+      <a href={localePath(lang)}>← {t('post.back')}</a>
+      <LangSwitch lang={lang} href={altHref} />
+    </div>
+    <article class="prose">
+      <h1>{post.data.title}</h1>
+      <p class="meta">{formatDate(post.data.date, lang)}{post.data.tags.length > 0 && ` · ${post.data.tags.join(' / ')}`}</p>
+      <Content />
+    </article>
+  </main>
+</Base>

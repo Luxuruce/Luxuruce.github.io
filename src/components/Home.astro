@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import LangSwitch from './LangSwitch.astro';
+import { profile } from '../data/profile';
+import { getProjects } from '../lib/github';
+import { getPosts, postSlug } from '../lib/posts';
+import { type Lang, useTranslations, localePath, otherLang, formatDate } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const projects = await getProjects(lang);
+const posts = await getPosts(lang);
+---
+
+<Base lang={lang} altHref={localePath(otherLang(lang))}>
+  <main class="container">
+    <header class="hero">
+      <div class="hero-top">
+        <img class="avatar" src={profile.avatar} alt={profile.name} width="56" height="56" />
+        <LangSwitch lang={lang} href={localePath(otherLang(lang))} />
+      </div>
+      <h1>{profile.name}</h1>
+      <p class="role">{profile.role[lang]}</p>
+      <p class="muted">{profile.bio[lang]}</p>
+      <nav class="links">
+        {profile.links.map((l) => <a href={l.href}>{l.label[lang]}</a>)}
+      </nav>
+    </header>
+
+    <section id="about">
+      <h2>{t('nav.about')}</h2>
+      {profile.about[lang].map((p) => <p>{p}</p>)}
+    </section>
+
+    <section id="projects">
+      <h2>{t('nav.projects')}</h2>
+      <ul class="list">
+        {
+          projects.map((p) => (
+            <li>
+              <a href={p.url}>{p.name}</a>
+              <span class="meta">{p.language}</span>
+              <p class="muted">{p.description ?? t('projects.noDescription')}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p><a href={`https://github.com/${profile.githubUser}?tab=repositories`}>{t('projects.viewAll')} →</a></p>
+    </section>
+
+    <section id="writing">
+      <h2>{t('nav.writing')}</h2>
+      {posts.length === 0 && <p class="muted">{t('writing.empty')}</p>}
+      <ul class="list">
+        {
+          posts.map((post) => (
+            <li>
+              <a href={localePath(lang, `/posts/${postSlug(post)}/`)}>{post.data.title}</a>
+              <span class="meta">{formatDate(post.data.date, lang)}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <footer class="muted">© {new Date().getFullYear()} {profile.name}</footer>
+  </main>
+</Base>
