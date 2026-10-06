@@ -14,6 +14,11 @@ export const ui = {
     'lang.switch': 'EN',
     'notFound.title': '页面不存在',
     'notFound.back': '回到首页',
+    'a11y.skip': '跳到正文',
+    'a11y.sectionNav': '页面导航',
+    'a11y.social': '社交链接',
+    'projects.stars': '星标',
+    'lang.label': 'Switch to English',
   },
   en: {
     'nav.about': 'About',
@@ -26,6 +31,11 @@ export const ui = {
     'lang.switch': '中文',
     'notFound.title': 'Page not found',
     'notFound.back': 'Back home',
+    'a11y.skip': 'Skip to content',
+    'a11y.sectionNav': 'Sections',
+    'a11y.social': 'Social links',
+    'projects.stars': 'stars',
+    'lang.label': '切换到中文',
   },
 } as const;
 

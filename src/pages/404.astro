@@ -4,9 +4,12 @@ import { ui } from '../i18n/ui';
 ---
 
 <Base lang="zh" title="404" altHref="/en/">
-  <main class="container">
-    <h1>404</h1>
-    <p>{ui.zh['notFound.title']} · {ui.en['notFound.title']}</p>
-    <p><a href="/">{ui.zh['notFound.back']}</a> · <a href="/en/">{ui.en['notFound.back']}</a></p>
+  <main class="not-found">
+    <h1 class="code">404</h1>
+    <p>{ui.zh['notFound.title']} · <span lang="en">{ui.en['notFound.title']}</span></p>
+    <div class="actions">
+      <a class="pill-btn" href="/">← {ui.zh['notFound.back']}</a>
+      <a class="pill-btn" href="/en/" lang="en">← {ui.en['notFound.back']}</a>
+    </div>
   </main>
 </Base>

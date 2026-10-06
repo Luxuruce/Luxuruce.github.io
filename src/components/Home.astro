@@ -13,59 +13,146 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const projects = await getProjects(lang);
 const posts = await getPosts(lang);
+
+const sections = [
+  { id: 'about', label: t('nav.about') },
+  { id: 'projects', label: t('nav.projects') },
+  { id: 'writing', label: t('nav.writing') },
+] as const;
 ---
 
 <Base lang={lang} altHref={localePath(otherLang(lang))}>
-  <main class="container">
-    <header class="hero">
-      <div class="hero-top">
-        <img class="avatar" src={profile.avatar} alt={profile.name} width="56" height="56" />
-        <LangSwitch lang={lang} href={localePath(otherLang(lang))} />
-      </div>
-      <h1>{profile.name}</h1>
+  <a class="skip-link" href="#content">{t('a11y.skip')}</a>
+  <div class="wrap">
+    <header class="sidebar">
+      <img class="avatar" src={profile.avatar} alt="" width="72" height="72" />
+      <h1 class="name"><a href={localePath(lang)}>{profile.name}</a></h1>
       <p class="role">{profile.role[lang]}</p>
-      <p class="muted">{profile.bio[lang]}</p>
-      <nav class="links">
-        {profile.links.map((l) => <a href={l.href}>{l.label[lang]}</a>)}
+      <p class="bio">{profile.bio[lang]}</p>
+
+      <nav class="section-nav" aria-label={t('a11y.sectionNav')}>
+        <ul>
+          {sections.map((s) => <li><a href={`#${s.id}`} data-nav={s.id}>{s.label}</a></li>)}
+        </ul>
       </nav>
+
+      <ul class="socials" aria-label={t('a11y.social')}>
+        {profile.links.map((l) => <li><a class="pill-btn" href={l.href}>{l.label[lang]}</a></li>)}
+        <li><LangSwitch lang={lang} href={localePath(otherLang(lang))} /></li>
+      </ul>
     </header>
 
-    <section id="about">
-      <h2>{t('nav.about')}</h2>
-      {profile.about[lang].map((p) => <p>{p}</p>)}
-    </section>
+    <main id="content" class="content">
+      <section id="about" class="section about" aria-labelledby="about-title">
+        <h2 id="about-title" class="section-title">{t('nav.about')}</h2>
+        {profile.about[lang].map((p) => <p>{p}</p>)}
+      </section>
 
-    <section id="projects">
-      <h2>{t('nav.projects')}</h2>
-      <ul class="list">
-        {
-          projects.map((p) => (
-            <li>
-              <a href={p.url}>{p.name}</a>
-              <span class="meta">{p.language}</span>
-              <p class="muted">{p.description ?? t('projects.noDescription')}</p>
-            </li>
-          ))
-        }
-      </ul>
-      <p><a href={`https://github.com/${profile.githubUser}?tab=repositories`}>{t('projects.viewAll')} →</a></p>
-    </section>
+      <section id="projects" class="section" aria-labelledby="projects-title">
+        <h2 id="projects-title" class="section-title">{t('nav.projects')}</h2>
+        <ul class="cards">
+          {
+            projects.map((p) => (
+              <li>
+                <a class="card" href={p.url}>
+                  <h3 class="card-title">
+                    {p.name} <span class="arrow" aria-hidden="true">↗</span>
+                  </h3>
+                  <p class="card-desc">{p.description ?? t('projects.noDescription')}</p>
+                  {(p.tags.length > 0 || p.stars > 0) && (
+                    <div class="card-meta">
+                      {p.tags.length > 0 && (
+                        <ul class="tags">
+                          {p.tags.map((tag) => <li class="tag">{tag}</li>)}
+                        </ul>
+                      )}
+                      {p.stars > 0 && (
+                        <span class="stars">
+                          <span aria-hidden="true">★</span> {p.stars}
+                          <span class="sr-only">{t('projects.stars')}</span>
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <a class="more-link" href={`https://github.com/${profile.githubUser}?tab=repositories`}>
+          {t('projects.viewAll')} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </section>
 
-    <section id="writing">
-      <h2>{t('nav.writing')}</h2>
-      {posts.length === 0 && <p class="muted">{t('writing.empty')}</p>}
-      <ul class="list">
-        {
-          posts.map((post) => (
-            <li>
-              <a href={localePath(lang, `/posts/${postSlug(post)}/`)}>{post.data.title}</a>
-              <span class="meta">{formatDate(post.data.date, lang)}</span>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
+      <section id="writing" class="section" aria-labelledby="writing-title">
+        <h2 id="writing-title" class="section-title">{t('nav.writing')}</h2>
+        {posts.length === 0 && <p class="empty">{t('writing.empty')}</p>}
+        <ul class="cards">
+          {
+            posts.map((post) => (
+              <li>
+                <a class="card" href={localePath(lang, `/posts/${postSlug(post)}/`)}>
+                  <time class="date" datetime={post.data.date.toISOString().slice(0, 10)}>
+                    {formatDate(post.data.date, lang)}
+                  </time>
+                  <h3 class="card-title">
+                    {post.data.title} <span class="arrow" aria-hidden="true">↗</span>
+                  </h3>
+                  {post.data.description && <p class="card-desc post-desc">{post.data.description}</p>}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
 
-    <footer class="muted">© {new Date().getFullYear()} {profile.name}</footer>
-  </main>
+      <footer class="site-footer">© {new Date().getFullYear()} {profile.name}</footer>
+    </main>
+  </div>
 </Base>
+
+<script is:inline>
+  (() => {
+    if (!('IntersectionObserver' in window)) return;
+    const links = new Map(
+      [...document.querySelectorAll('.section-nav [data-nav]')].map((a) => [a.dataset.nav, a]),
+    );
+    const sections = [...links.keys()].map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length) return;
+    const visible = new Set();
+    let atEnd = false;
+    const setActive = (id) => {
+      links.forEach((a, key) => {
+        const on = key === id;
+        a.classList.toggle('active', on);
+        if (on) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    };
+    const update = () => {
+      if (atEnd) return setActive(sections[sections.length - 1].id);
+      const first = sections.find((s) => visible.has(s.id));
+      if (first) setActive(first.id);
+    };
+    // 视口上部 40% 的区域内出现的第一个区块视为"当前区块"
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => (e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id)));
+        update();
+      },
+      { rootMargin: '0px 0px -60% 0px' },
+    );
+    sections.forEach((s) => io.observe(s));
+    // 滚到页面底部时，最后一个区块可能到不了上部区域，用页脚兜底
+    const footer = document.querySelector('.site-footer');
+    if (footer) {
+      new IntersectionObserver(
+        ([e]) => {
+          atEnd = e.isIntersecting && window.scrollY > 0;
+          update();
+        },
+        { threshold: 1 },
+      ).observe(footer);
+    }
+  })();
+</script>
