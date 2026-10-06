@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LenoraL · 现代卡片式</title>
+<style>
+  :root {
+    --bg: #0b1324; --panel: #111c33; --panel-hover: #16233f; --fg: #dbe3f4; --muted: #8a99b8;
+    --accent: #5eead4; --accent-soft: rgba(94, 234, 212, .12); --line: #1f2c49;
+  }
+  * { box-sizing: border-box; }
+  html[data-lang="zh"] .en, html[data-lang="en"] .zh { display: none; }
+  body {
+    margin: 0; color: var(--fg);
+    background: radial-gradient(900px 600px at 15% 0%, #13254a 0%, transparent 60%), var(--bg);
+    background-attachment: fixed;
+    font: 16px/1.7 Inter, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; display: grid; grid-template-columns: 1fr; gap: 48px; }
+  @media (min-width: 960px) { .wrap { grid-template-columns: 5fr 7fr; gap: 64px; padding: 0 48px; } }
+
+  aside { padding-top: 72px; }
+  @media (min-width: 960px) { aside { position: sticky; top: 0; height: 100vh; padding: 96px 0; display: flex; flex-direction: column; } }
+  .avatar { width: 72px; height: 72px; border-radius: 18px; border: 2px solid var(--line); }
+  h1 { font-size: 42px; line-height: 1.15; margin: 20px 0 8px; color: #f1f5ff; letter-spacing: -.02em; }
+  .role { font-size: 19px; color: #f1f5ff; margin: 0 0 12px; }
+  .bio { color: var(--muted); max-width: 380px; margin: 0; }
+  nav { margin-top: 40px; display: none; }
+  @media (min-width: 960px) { nav { display: block; } }
+  nav a { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; padding: 8px 0; }
+  nav a::before { content: ""; width: 32px; height: 1px; background: var(--muted); transition: width .2s; }
+  nav a:hover { color: var(--fg); }
+  nav a:hover::before { width: 64px; background: var(--fg); }
+  .socials { display: flex; gap: 12px; margin-top: 32px; }
+  @media (min-width: 960px) { .socials { margin-top: auto; } }
+  .socials a, button.lang {
+    border: 1px solid var(--line); background: var(--panel); color: var(--muted);
+    padding: 6px 14px; border-radius: 8px; font: inherit; font-size: 14px; cursor: pointer;
+  }
+  .socials a:hover, button.lang:hover { color: var(--accent); border-color: var(--accent); }
+
+  main { padding: 0 0 96px; }
+  @media (min-width: 960px) { main { padding: 96px 0; } }
+  section { margin-bottom: 72px; scroll-margin-top: 48px; }
+  h2 { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--fg); margin: 0 0 20px; }
+  .about p { color: var(--muted); margin: 0 0 16px; }
+  .card {
+    display: block; padding: 22px 24px; border-radius: 14px; margin-bottom: 12px;
+    border: 1px solid transparent; transition: background .2s, border-color .2s, transform .2s;
+  }
+  .card:hover { background: var(--panel-hover); border-color: var(--line); transform: translateY(-2px); }
+  .card-title { font-weight: 600; color: #f1f5ff; display: flex; align-items: center; gap: 6px; }
+  .card:hover .card-title { color: var(--accent); }
+  .card-title .arrow { transition: transform .2s; }
+  .card:hover .arrow { transform: translate(3px, -3px); }
+  .card-desc { color: var(--muted); font-size: 15px; margin: 6px 0 12px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: var(--accent-soft); color: var(--accent); font-size: 12px; padding: 3px 10px; border-radius: 999px; }
+  .date { color: var(--muted); font-size: 13px; }
+  footer { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside>
+    <img class="avatar" src="https://avatars.githubusercontent.com/u/74332053?v=4" alt="LenoraL">
+    <h1>LenoraL</h1>
+    <p class="role"><span class="zh">开发者 · AI Agent · 前端</span><span class="en">Developer · AI Agents · Front-end</span></p>
+    <p class="bio">
+      <span class="zh">我喜欢把想法快速做成可交互的原型。（占位简介，待替换）</span>
+      <span class="en">I like turning ideas into interactive prototypes, fast. (Placeholder bio)</span>
+    </p>
+    <nav>
+      <a href="#about"><span class="zh">关于</span><span class="en">About</span></a>
+      <a href="#projects"><span class="zh">项目</span><span class="en">Projects</span></a>
+      <a href="#writing"><span class="zh">文章</span><span class="en">Writing</span></a>
+    </nav>
+    <div class="socials">
+      <a href="https://github.com/Luxuruce">GitHub</a>
+      <a href="mailto:hello@example.com"><span class="zh">邮箱</span><span class="en">Email</span></a>
+      <button class="lang" onclick="toggleLang()"><span class="zh">EN</span><span class="en">中文</span></button>
+    </div>
+  </aside>
+
+  <main>
+    <section id="about" class="about">
+      <h2><span class="zh">关于</span><span class="en">About</span></h2>
+      <p>
+        <span class="zh">这里写两三段自我介绍：你在做什么、擅长什么、最近对什么感兴趣。（占位文字）</span>
+        <span class="en">Two or three short paragraphs about what you do, what you're good at, and what you're exploring lately. (Placeholder)</span>
+      </p>
+    </section>
+
+    <section id="projects">
+      <h2><span class="zh">项目</span><span class="en">Projects</span></h2>
+      <a class="card" href="https://github.com/Luxuruce/ai-smart-tourism-demo">
+        <div class="card-title">ai-smart-tourism-demo <span class="arrow">↗</span></div>
+        <div class="card-desc">
+          <span class="zh">青石古镇 · 景区口碑与体验 MVP 可交互前端原型（uni-app 游客端 + Vue 3 后台）</span>
+          <span class="en">Interactive MVP prototype for scenic-area reviews &amp; visitor experience (uni-app client + Vue 3 admin)</span>
+        </div>
+        <div class="tags"><span class="tag">Vue 3</span><span class="tag">uni-app</span></div>
+      </a>
+      <a class="card" href="https://github.com/Luxuruce/priceRelatAgent">
+        <div class="card-title">priceRelatAgent <span class="arrow">↗</span></div>
+        <div class="card-desc"><span class="zh">（项目描述待补充）</span><span class="en">(Description coming soon)</span></div>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Agent</span></div>
+      </a>
+      <a class="card" href="https://github.com/Luxuruce/kernelPlia">
+        <div class="card-title">kernelPlia <span class="arrow">↗</span></div>
+        <div class="card-desc"><span class="zh">（项目描述待补充）</span><span class="en">(Description coming soon)</span></div>
+        <div class="tags"><span class="tag">Python</span></div>
+      </a>
+    </section>
+
+    <section id="writing">
+      <h2><span class="zh">文章</span><span class="en">Writing</span></h2>
+      <a class="card" href="#">
+        <div class="date">2026-10</div>
+        <div class="card-title"><span class="zh">示例文章：搭建个人主页</span><span class="en">Sample post: building my homepage</span> <span class="arrow">↗</span></div>
+      </a>
+    </section>
+
+    <footer>© 2026 LenoraL</footer>
+  </main>
+</div>
+<script>
+  function toggleLang() {
+    var h = document.documentElement;
+    var next = h.dataset.lang === 'zh' ? 'en' : 'zh';
+    h.dataset.lang = next; h.lang = next === 'zh' ? 'zh-CN' : 'en';
+  }
+</script>
+</body>
+</html>

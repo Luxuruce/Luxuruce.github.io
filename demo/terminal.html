@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LenoraL · 终端极客风</title>
+<style>
+  :root {
+    --bg: #0d1117; --fg: #c9d1d9; --muted: #6e7681; --green: #7ee787; --blue: #79c0ff;
+    --yellow: #e3b341; --pink: #ff7b72; --line: #21262d;
+  }
+  * { box-sizing: border-box; }
+  html[data-lang="zh"] .en, html[data-lang="en"] .zh { display: none; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.7 "JetBrains Mono", "SF Mono", Menlo, Consolas, "Noto Sans Mono CJK SC", monospace;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
+  .bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--line); padding-bottom: 12px; margin-bottom: 32px; }
+  .logo { color: var(--green); font-weight: 700; }
+  .logo::after { content: "_"; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  button.lang { background: none; border: 1px solid var(--line); color: var(--muted); font: inherit; font-size: 13px; padding: 2px 10px; cursor: pointer; }
+  button.lang:hover { color: var(--green); border-color: var(--green); }
+  .block { margin-bottom: 36px; }
+  .cmd { color: var(--muted); }
+  .cmd .ps { color: var(--green); }
+  .cmd .path { color: var(--blue); }
+  .cmd b { color: var(--fg); font-weight: 400; }
+  .out { margin: 6px 0 0; padding-left: 2ch; }
+  .ascii { color: var(--green); font-size: 12px; line-height: 1.2; margin: 0 0 12px; overflow-x: auto; }
+  .k { color: var(--pink); }
+  .s { color: var(--yellow); }
+  table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+  td { overflow-wrap: anywhere; }
+  td.perm { width: 12ch; } td.lang-col { width: 8ch; }
+  td { padding: 4px 16px 4px 0; vertical-align: top; }
+  td.perm { color: var(--muted); white-space: nowrap; }
+  td.lang-col { color: var(--yellow); white-space: nowrap; }
+  .desc { color: var(--muted); }
+  @media (max-width: 560px) { td.perm { display: none; } }
+  footer { color: var(--muted); font-size: 13px; border-top: 1px dashed var(--line); padding-top: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar">
+    <span class="logo">~/lenoral</span>
+    <button class="lang" onclick="toggleLang()"><span class="zh">[EN]</span><span class="en">[中文]</span></button>
+  </div>
+
+  <div class="block">
+<pre class="ascii"> _                               _
+| |    ___ _ __   ___  _ __ __ _| |
+| |   / _ \ '_ \ / _ \| '__/ _` | |
+| |__|  __/ | | | (_) | | | (_| | |___
+|_____\___|_| |_|\___/|_|  \__,_|_____|</pre>
+    <div class="cmd"><span class="ps">lenoral@github</span>:<span class="path">~</span>$ <b>whoami</b></div>
+    <div class="out">
+      <div><span class="k">name</span>  = <span class="s">"LenoraL"</span></div>
+      <div><span class="k">role</span>  = <span class="s"><span class="zh">"开发者 / AI Agent / 前端"</span><span class="en">"developer / AI agents / front-end"</span></span></div>
+      <div><span class="k">about</span> = <span class="s"><span class="zh">"把想法做成能跑的原型（占位简介）"</span><span class="en">"turning ideas into running prototypes (placeholder)"</span></span></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="cmd"><span class="ps">lenoral@github</span>:<span class="path">~</span>$ <b>ls -l projects/</b></div>
+    <div class="out">
+      <table>
+        <tr>
+          <td class="perm">drwxr-xr-x</td>
+          <td class="lang-col">Vue</td>
+          <td><a href="https://github.com/Luxuruce/ai-smart-tourism-demo">ai-smart-tourism-demo/</a>
+            <div class="desc"># <span class="zh">青石古镇 · 景区口碑与体验 MVP 可交互前端原型（uni-app + Vue 3）</span><span class="en">scenic-area reviews &amp; experience MVP prototype (uni-app + Vue 3)</span></div></td>
+        </tr>
+        <tr>
+          <td class="perm">drwxr-xr-x</td>
+          <td class="lang-col">Python</td>
+          <td><a href="https://github.com/Luxuruce/priceRelatAgent">priceRelatAgent/</a>
+            <div class="desc"># <span class="zh">描述待补充</span><span class="en">description coming soon</span></div></td>
+        </tr>
+        <tr>
+          <td class="perm">drwxr-xr-x</td>
+          <td class="lang-col">Python</td>
+          <td><a href="https://github.com/Luxuruce/kernelPlia">kernelPlia/</a>
+            <div class="desc"># <span class="zh">描述待补充</span><span class="en">description coming soon</span></div></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="cmd"><span class="ps">lenoral@github</span>:<span class="path">~</span>$ <b>ls posts/</b></div>
+    <div class="out">
+      <div><span class="desc">2026-10-06</span>  <a href="#"><span class="zh">示例文章：搭建个人主页.md</span><span class="en">sample-post-building-my-homepage.md</span></a></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="cmd"><span class="ps">lenoral@github</span>:<span class="path">~</span>$ <b>cat contact.txt</b></div>
+    <div class="out">
+      <div>github → <a href="https://github.com/Luxuruce">github.com/Luxuruce</a></div>
+      <div>email  → <a href="mailto:hello@example.com">hello@example.com</a> <span class="desc"># <span class="zh">占位</span><span class="en">placeholder</span></span></div>
+    </div>
+  </div>
+
+  <footer>© 2026 LenoraL · <span class="zh">本页面为风格 demo</span><span class="en">style demo</span></footer>
+</main>
+<script>
+  function toggleLang() {
+    var h = document.documentElement;
+    var next = h.dataset.lang === 'zh' ? 'en' : 'zh';
+    h.dataset.lang = next; h.lang = next === 'zh' ? 'zh-CN' : 'en';
+  }
+</script>
+</body>
+</html>
